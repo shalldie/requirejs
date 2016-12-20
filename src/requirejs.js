@@ -1,0 +1,3 @@
+import requirejs from './core';
+
+
