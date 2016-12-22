@@ -1,3 +1,3 @@
-import requirejs from './core';
+import core from './core';
 
 
