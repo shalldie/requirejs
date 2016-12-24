@@ -66,5 +66,37 @@ export default {
             }
             return arr;
         }
+    },
+    /**
+     * 规范化路径
+     * 
+     * @param {any} path
+     * @returns 规范化后的路径
+     */
+    normalizePath: function (path) {
+        path = path.replace(/\/+/g, '/'); // 将多余的 / 转换成一个
+
+        path = path.replace(/\/\.\//g, '/'); //  /./ => /
+
+        path = path.replace(/$\.\//g, '');  // 起始位置的 ./ 去掉
+
+        while (~path.indexOf('../')) {
+
+        }
+
+        return path;
+    },
+    /**
+     * 合并路径
+     * 
+     * @param {any} from 起始路径
+     * @param {any} to 目标路径
+     * @returns 合并后的规范路径
+     */
+    resolvePath: function (from, to) {
+        if (to) {
+            from += "/" + to;
+        }
+        return this.normalizePath(from);
     }
 };
