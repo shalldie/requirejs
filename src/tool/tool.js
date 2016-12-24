@@ -80,8 +80,8 @@ export default {
 
         path = path.replace(/$\.\//g, '');  // 起始位置的 ./ 去掉
 
-        while (~path.indexOf('../')) {
-
+        while (~path.indexOf('../')) {  // 去掉   ../
+            path = path.replace(/[^\.\/]+\/\.\.\//g, '');
         }
 
         return path;
