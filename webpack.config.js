@@ -3,7 +3,7 @@ var path = require('path');
 
 module.exports = {
     entry: {
-        app: './src/requirejs'
+        requirejs: './src/requirejs'
     },
     output: {
         path: './dist',

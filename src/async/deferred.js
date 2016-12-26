@@ -1,4 +1,4 @@
-import _ from './tool';
+import _ from '../tool/tool';
 import callbacks from './callbacks';
 
 /**

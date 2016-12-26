@@ -3,12 +3,35 @@ import deferred from './async/deferred';
 import all from './async/all';
 import _ from './tool/tool';
 
-let defineName = core.defineName; // 模块定义名称，define
 
-let lastModule = null; // 最后一个加载的module
+let lastModule = null; // 最后一个加载的module的promise
+
+let rootUrl = "";  // 入口文件目录
 
 
-function defineModule() {
+/**
+ * 程序入口， require
+ * 
+ * @export
+ * @param {any} deps 依赖项
+ * @param {any} callback 程序入口
+ */
+export function requireModule(deps, callback) {
+    let script = [].slice.call(document.getElementsByTagName('script')).slice(-1)[0];
+    rootUrl = script.getAttribute("data-main");
+
+    deps = deps.map(url => getModule(_.resolvePath(rootUrl, url)));
+    setTimeout(function () {  // 避免阻塞同文件中，使用名称定义的模块
+        deps.then(callback);
+    }, 0);
+}
+
+/**
+ * 模块定义，url,deps,sender
+ * 
+ * @export
+ */
+export function defineModule() {
     let args = _.makeArray(arguments);
     let name,     // 模块名称
         proArr,   // 模块依赖
@@ -41,24 +64,30 @@ function defineModule() {
     });
 
 
-    all(proArr).then(function (args) {  // 在依赖项加载完毕后，进行模块处理
-        let _type = _.type(sender);  // 回调模块类型 
+    all(proArr).then(function (_args) {  // 在依赖项加载完毕后，进行模块处理
 
-        if (!~[1, 2].indexOf(argsLen)) {  // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
-            return;
-        }
-
-        let dfd = core.dict[name];
+        let result; // 最终结果
+        let _type = _.type(sender); // 回调模块类型
 
         if (_type == "function") {
-            dfd.resolve(sender(args));
+            result = sender(_args);
         }
         else if (_type == "object") {
-            dfd.resolve(sender);
+            result = _args;
         }
         else {
-            throw Error('模块定义异常');
+            throw Error("参数类型错误");
         }
+
+        let pro = deferred().resolve(result).promise();
+
+        if (!~[1, 2].indexOf(argsLen)) {  // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
+            lastModule = pro;
+        }
+        else {
+            core.dict[name] = pro;
+        }
+
     });
 
 }
@@ -79,15 +108,18 @@ function getModule(name) {
     script.type = "text/javascript";
     script.async = true;
     script.charset = "utf-8";
-    script.src = name;
+    script.src = name + ".js";
 
     let dfd = deferred();
+    dict[name] = dfd;
 
     script.onload = function () {  // 模块加载完毕，立马会触发 load 事件，由此来确定模块所属
-        dict[name] = lastModule;
+        lastModule.then(result => {  // 在模块加载完毕之后，触发该模块的 resolve
+            dfd.resolve(result);
+        });
     };
 
-    document.body.appendChild(script);
+    document.head.appendChild(script);
 
     return dfd.promise();
 }

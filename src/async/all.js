@@ -1,5 +1,5 @@
 import deferred from './deferred';
-import _ from './tool';
+import _ from '../tool/tool';
 
 export default function (promises) {
     promises = _.makeArray(promises);
