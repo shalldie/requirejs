@@ -15,6 +15,10 @@ export default {
      */
     requireName: "require",
     /**
+     * 根目录，入口文件目录
+     */
+    rootUrl: "",
+    /**
      * 依赖模块存储字典
      */
     dict: {  // 模块字典 {key:string,value:promise}

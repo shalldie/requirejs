@@ -7,31 +7,7 @@
 </head>
 
 <body>
-    <script>
-        (function () {
-
-            let script = document.createElement('script');
-            script.type = "text/javascript";
-            script.src = "test/demo.js";
-            script.async = true;
-            script.onload = function () {
-                console.log('onload');
-            }
-            document.head.appendChild(script);
-        })();
-
-        (function () {
-
-            let script = document.createElement('script');
-            script.type = "text/javascript";
-            script.src = "test/demo2.js";
-            script.async = true;
-            script.onload = function () {
-                console.log('onload2');
-            }
-            document.head.appendChild(script);
-        })();
-    </script>
+    <script data-main="test/index" src="dist/require.js"></script>
 </body>
 
 </html>

@@ -3,10 +3,7 @@ import deferred from './async/deferred';
 import all from './async/all';
 import _ from './tool/tool';
 
-
-let lastModule = null; // 最后一个加载的module的promise
-
-let rootUrl = "";  // 入口文件目录
+let lastNameDfd = null; // 最后一个加载的module的name的 deferred
 
 
 /**
@@ -17,12 +14,9 @@ let rootUrl = "";  // 入口文件目录
  * @param {any} callback 程序入口
  */
 export function requireModule(deps, callback) {
-    let script = [].slice.call(document.getElementsByTagName('script')).slice(-1)[0];
-    rootUrl = script.getAttribute("data-main");
-
-    deps = deps.map(url => getModule(_.resolvePath(rootUrl, url)));
+    deps = deps.map(url => getModule(_.resolvePath(core.rootUrl, url)));
     setTimeout(function () {  // 避免阻塞同文件中，使用名称定义的模块
-        deps.then(callback);
+        all(deps).then(callback);
     }, 0);
 }
 
@@ -33,7 +27,7 @@ export function requireModule(deps, callback) {
  */
 export function defineModule() {
     let args = _.makeArray(arguments);
-    let name,     // 模块名称
+    let name = "",     // 模块名称
         proArr,   // 模块依赖
         sender; // 模块的主体
 
@@ -56,39 +50,43 @@ export function defineModule() {
         throw Error('参数个数异常');
     }
 
-    name = _.normalizePath(name); // 名称，路径
+    lastNameDfd = deferred();  // 先获取当前模块名称
 
-    proArr = proArr.map(url => {  // 各个依赖项 
-        url = _.resolvePath(name, url); // 以当前路径为基准，合并路径
-        return getModule(url);
+    lastNameDfd.then((name, lastModule) => {
+        name = _.normalizePath(name); // 名称，路径
+
+        proArr = proArr.map(url => {  // 各个依赖项 
+            url = _.resolvePath(name, url); // 以当前路径为基准，合并路径
+            return getModule(url);
+        });
+
+        all(proArr).then(function (_args) {  // 在依赖项加载完毕后，进行模块处理
+            _args = _args || [];
+            let result; // 最终结果
+            let _type = _.type(sender); // 回调模块类型
+
+            if (_type == "function") {
+                result = sender(..._args);
+            }
+            else if (_type == "object") {
+                result = sender;
+            }
+            else {
+                throw Error("参数类型错误");
+            }
+
+            lastModule.resolve(result);
+
+            if (argsLen == 3) { // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
+                core.dict[name] = lastModule;
+            }
+
+        });
     });
 
-
-    all(proArr).then(function (_args) {  // 在依赖项加载完毕后，进行模块处理
-
-        let result; // 最终结果
-        let _type = _.type(sender); // 回调模块类型
-
-        if (_type == "function") {
-            result = sender(_args);
-        }
-        else if (_type == "object") {
-            result = _args;
-        }
-        else {
-            throw Error("参数类型错误");
-        }
-
-        let pro = deferred().resolve(result).promise();
-
-        if (!~[1, 2].indexOf(argsLen)) {  // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
-            lastModule = pro;
-        }
-        else {
-            core.dict[name] = pro;
-        }
-
-    });
+    if (argsLen == 3) {  // 如果是自定义模块名，直接触发
+        lastNameDfd.resolve(name, deferred());
+    }
 
 }
 
@@ -104,22 +102,36 @@ function getModule(name) {
         return dict[name];
     }
 
-    let script = document.createElement('script');
-    script.type = "text/javascript";
-    script.async = true;
-    script.charset = "utf-8";
-    script.src = name + ".js";
+    let script = addScript(name);
 
     let dfd = deferred();
     dict[name] = dfd;
 
     script.onload = function () {  // 模块加载完毕，立马会触发 load 事件，由此来确定模块所属
+        let lastModule = deferred();
+        lastNameDfd.resolve(name, lastModule); // 绑定当前模块的名称
+
         lastModule.then(result => {  // 在模块加载完毕之后，触发该模块的 resolve
             dfd.resolve(result);
         });
     };
 
-    document.head.appendChild(script);
-
     return dfd.promise();
+}
+
+/**
+ * 添加 script 标签
+ * 
+ * @export
+ * @param {any} name
+ * @returns
+ */
+export function addScript(name) {
+    let script = document.createElement('script');
+    script.type = "text/javascript";
+    script.async = true;
+    script.charset = "utf-8";
+    script.src = name + ".js";
+    document.head.appendChild(script);
+    return script;
 }

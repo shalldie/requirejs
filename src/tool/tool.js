@@ -74,6 +74,8 @@ export default {
      * @returns 规范化后的路径
      */
     normalizePath: function (path) {
+        path = path.replace(/\.js$/, ''); // 去掉末尾的 .js
+
         path = path.replace(/\/+/g, '/'); // 将多余的 / 转换成一个
 
         path = path.replace(/\/\.\//g, '/'); //  /./ => /
@@ -94,6 +96,7 @@ export default {
      * @returns 合并后的规范路径
      */
     resolvePath: function (from, to) {
+        from = from.replace(/\/[^\/]+$/, '');
         if (to) {
             from += "/" + to;
         }
