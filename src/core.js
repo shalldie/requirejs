@@ -15,6 +15,10 @@ export default {
      */
     requireName: "require",
     /**
+     * 暴露的全局名称
+     */
+    coreName: "requirejs",
+    /**
      * 根目录，入口文件目录
      */
     rootUrl: "",

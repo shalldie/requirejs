@@ -54,13 +54,17 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// let coreName = core.coreName; // 核心模块名称  
 	var requireName = _core2.default.requireName; // 程序入口函数名称,require
 	var defineName = _core2.default.defineName; // 模块定义名称，define
+
+	// window[coreName] = core;  // 这里暴露出去，主要用于调试
 
 	window[requireName] = _loader.requireModule;
 
 	window[defineName] = _loader.defineModule;
 
+	// 加载 data-main
 	var script = [].slice.call(document.getElementsByTagName('script')).slice(-1)[0];
 	_core2.default.rootUrl = script.getAttribute("data-main");
 
@@ -91,6 +95,10 @@
 	   * 程序入口函数
 	   */
 	  requireName: "require",
+	  /**
+	   * 暴露的全局名称
+	   */
+	  coreName: "requirejs",
 	  /**
 	   * 根目录，入口文件目录
 	   */
@@ -152,7 +160,9 @@
 	    });
 	    setTimeout(function () {
 	        // 避免阻塞同文件中，使用名称定义的模块
-	        (0, _all2.default)(deps).then(callback);
+	        (0, _all2.default)(deps).then(function (args) {
+	            callback.apply(undefined, _toConsumableArray(args));
+	        });
 	    }, 0);
 	}
 

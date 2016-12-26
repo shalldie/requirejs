@@ -16,7 +16,9 @@ let lastNameDfd = null; // 最后一个加载的module的name的 deferred
 export function requireModule(deps, callback) {
     deps = deps.map(url => getModule(_.resolvePath(core.rootUrl, url)));
     setTimeout(function () {  // 避免阻塞同文件中，使用名称定义的模块
-        all(deps).then(callback);
+        all(deps).then(function (args) {
+            callback(...args);
+        });
     }, 0);
 }
 
