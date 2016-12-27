@@ -1,7 +1,18 @@
+require([
+    './helloworld/helloworld',
+    './module/item1',
+    'module/item2',
+    './tool/tool'
+], function (helloworld, item1, item2, _) {
+    var result = helloworld + "<br><br>item2 的原始值：<br><br>" + item1;
 
-require(['./module/item1', 'helloworld/helloworld'], function (item1, helloworld) {
-    var demo = document.getElementById("demo");
-    demo.innerHTML = item1 + "------" + helloworld;
-    console.log(item1);
-    console.log(helloworld);
-});
+    result += "在 item1 中处理之后，item2 的现有值为：<br><br>";
+
+    _.each(item2, function (k, v) {
+        result += k + ": " + v + " <br><br>";
+    });
+
+
+    var demo = document.getElementById('demo');
+    demo.innerHTML = result;
+})

@@ -15,7 +15,7 @@ export default {
      */
     requireName: "require",
     /**
-     * 暴露的全局名称
+     * 暴露的全局名称，可用于配置
      */
     coreName: "requirejs",
     /**

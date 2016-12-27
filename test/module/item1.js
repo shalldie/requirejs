@@ -1,7 +1,15 @@
 define([
     './item2',
-    '../module2/item3'
-], function (item2, item3) {
-    // console.log(item2, item3);
-    return item2 + item3 + 1;
-});
+    '../tool/tool'
+],
+    function (item2, _) {
+        var result = "";
+        _.each(item2, function (k, v) {
+            result += k + ": " + v + " <br><br>";
+            item2[k] = v + v;
+        });
+
+
+        return result;
+    }
+);

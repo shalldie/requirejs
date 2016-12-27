@@ -1,6 +1,6 @@
 define([
-    "./hello",
-    "./world"
+    './hello',
+    './world'
 ], function (hello, world) {
-    return hello + "~ " + world;
+    return hello + world;
 });
