@@ -54,11 +54,11 @@ export function defineModule() {
 
     lastNameDfd = deferred();  // 先获取当前模块名称
 
-    lastNameDfd.then((name, lastModule) => {
-        name = _.normalizePath(name); // 名称，路径
+    lastNameDfd.then((_name, lastModule) => {
+        _name = _.normalizePath(_name); // 名称，路径
 
         proArr = proArr.map(url => {  // 各个依赖项 
-            url = _.resolvePath(name, url); // 以当前路径为基准，合并路径
+            url = _.resolvePath(_name, url); // 以当前路径为基准，合并路径
             return getModule(url);
         });
 
@@ -80,7 +80,7 @@ export function defineModule() {
             lastModule.resolve(result);
 
             if (argsLen == 3) { // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
-                core.dict[name] = lastModule;
+                core.dict[_name] = lastModule;
             }
 
         });

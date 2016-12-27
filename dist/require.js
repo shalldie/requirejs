@@ -200,12 +200,12 @@
 
 	    lastNameDfd = (0, _deferred2.default)(); // 先获取当前模块名称
 
-	    lastNameDfd.then(function (name, lastModule) {
-	        name = _tool2.default.normalizePath(name); // 名称，路径
+	    lastNameDfd.then(function (_name, lastModule) {
+	        _name = _tool2.default.normalizePath(_name); // 名称，路径
 
 	        proArr = proArr.map(function (url) {
 	            // 各个依赖项 
-	            url = _tool2.default.resolvePath(name, url); // 以当前路径为基准，合并路径
+	            url = _tool2.default.resolvePath(_name, url); // 以当前路径为基准，合并路径
 	            return getModule(url);
 	        });
 
@@ -227,7 +227,7 @@
 
 	            if (argsLen == 3) {
 	                // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
-	                _core2.default.dict[name] = lastModule;
+	                _core2.default.dict[_name] = lastModule;
 	            }
 	        });
 	    });
