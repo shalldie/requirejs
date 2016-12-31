@@ -2,8 +2,9 @@ require([
     './helloworld/helloworld',
     './module/item1',
     'module/item2',
-    './tool/tool'
-], function (helloworld, item1, item2, _) {
+    './tool/tool',
+    'test'
+], function (helloworld, item1, item2, _, test) {
     var result = helloworld +
         "<br><br>-----------------------------------------------<br><br>" +
         "item2 的原始值：<br><br>" + item1;
@@ -17,5 +18,13 @@ require([
 
 
     var demo = document.getElementById('demo');
-    demo.innerHTML = result;
-})
+    demo.innerHTML = result + test;
+});
+
+define(
+    'test',
+    [],
+    function () {
+        return "this is test module";
+    }
+);

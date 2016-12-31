@@ -68,7 +68,7 @@ export default {
         }
     },
     /**
-     * 规范化路径
+     * 规范化路径，这个方法写的比较渣，期待想到更好的方式
      * 
      * @param {any} path
      * @returns 规范化后的路径
