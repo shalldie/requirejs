@@ -155,11 +155,11 @@
 	 * @param {any} callback 程序入口
 	 */
 	function requireModule(deps, callback) {
-	    deps = deps.map(function (url) {
-	        return getModule(_tool2.default.resolvePath(_core2.default.rootUrl, url));
-	    });
 	    setTimeout(function () {
 	        // 避免阻塞同文件中，使用名称定义的模块
+	        deps = deps.map(function (url) {
+	            return getModule(_tool2.default.resolvePath(_core2.default.rootUrl, url));
+	        });
 	        (0, _all2.default)(deps).then(function (args) {
 	            callback.apply(undefined, _toConsumableArray(args));
 	        });
@@ -227,6 +227,7 @@
 
 	            if (argsLen == 3) {
 	                // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
+	                _name = _tool2.default.resolvePath(_core2.default.rootUrl, _name);
 	                _core2.default.dict[_name] = lastModule;
 	            }
 	        });

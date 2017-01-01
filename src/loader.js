@@ -14,8 +14,8 @@ let lastNameDfd = null; // 最后一个加载的module的name的 deferred
  * @param {any} callback 程序入口
  */
 export function requireModule(deps, callback) {
-    deps = deps.map(url => getModule(_.resolvePath(core.rootUrl, url)));
     setTimeout(function () {  // 避免阻塞同文件中，使用名称定义的模块
+        deps = deps.map(url => getModule(_.resolvePath(core.rootUrl, url)));
         all(deps).then(function (args) {
             callback(...args);
         });
@@ -80,6 +80,7 @@ export function defineModule() {
             lastModule.resolve(result);
 
             if (argsLen == 3) { // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
+                _name = _.resolvePath(core.rootUrl, _name);
                 core.dict[_name] = lastModule;
             }
 
