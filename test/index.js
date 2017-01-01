@@ -19,12 +19,21 @@ require([
 
     var demo = document.getElementById('demo');
     demo.innerHTML = result + test;
+    alert(test);
 });
 
 define(
     'test',
-    [],
-    function () {
-        return "this is test module";
+    ['testtest'],
+    function (tt) {
+        return "this is test " + tt;
     }
 );
+
+define(
+    'testtest',
+    [],
+    function () {
+        return "test module";
+    }
+)

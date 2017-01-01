@@ -52,9 +52,7 @@ export function defineModule() {
         throw Error('参数个数异常');
     }
 
-    lastNameDfd = deferred();  // 先获取当前模块名称
-
-    lastNameDfd.then((_name, lastModule) => {
+    let dfdThen = (_name, lastModule) => {
         _name = _.normalizePath(_name); // 名称，路径
 
         proArr = proArr.map(url => {  // 各个依赖项 
@@ -79,16 +77,24 @@ export function defineModule() {
 
             lastModule.resolve(result);
 
-            if (argsLen == 3) { // 只有在外部js作为模块，才进行回调处理，命名模块直接添加
-                _name = _.resolvePath(core.rootUrl, _name);
-                core.dict[_name] = lastModule;
-            }
-
         });
-    });
+    };
 
-    if (argsLen == 3) {  // 如果是自定义模块名，直接触发
-        lastNameDfd.resolve(name, deferred());
+    if (argsLen < 3) {  // 如果是匿名模块，使用 onload 来判断js的名称／路径
+        lastNameDfd = deferred();  // 先获取当前模块名称
+
+        lastNameDfd.then(dfdThen);
+    }
+    else {  // 如果是自定义模块名，直接触发,命名模块直接添加
+        let lastModule = deferred();
+        let dictName = _.resolvePath(core.rootUrl, name);
+        core.dict[dictName] = lastModule;
+
+        let namedDfd = deferred().then(dfdThen);
+
+        setTimeout(function () {   // 避免同文件中，多个命名模块注册阻塞，先把名字注册了，具体内容等待一下 event loop 
+            namedDfd.resolve(name, lastModule);
+        }, 0);
     }
 
 }
