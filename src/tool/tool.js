@@ -80,7 +80,7 @@ export default {
 
         path = path.replace(/\/\.\//g, '/'); //  /./ => /
 
-        path = path.replace(/$\.\//g, '');  // 起始位置的 ./ 去掉
+        path = path.replace(/^\.?\//, '');  // 起始位置的 ./ 和 / 去掉
 
         while (~path.indexOf('../')) {  // 去掉   ../
             path = path.replace(/[^\.\/]+\/\.\.\//g, '');
@@ -96,7 +96,7 @@ export default {
      * @returns 合并后的规范路径
      */
     resolvePath: function (from, to) {
-        from = from.replace(/\/[^\/]+$/, '');
+        from = from.replace(/[^\/]+$/, '');
         if (to) {
             from += "/" + to;
         }

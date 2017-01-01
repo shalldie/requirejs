@@ -241,7 +241,7 @@
 
 	            setTimeout(function () {
 	                // 避免同文件中，多个命名模块注册阻塞，先把名字注册了，具体内容等待一下 event loop 
-	                namedDfd.resolve(name, lastModule);
+	                namedDfd.resolve(dictName, lastModule);
 	            }, 0);
 	        })();
 	    }
@@ -448,7 +448,7 @@
 
 	        path = path.replace(/\/\.\//g, '/'); //  /./ => /
 
-	        path = path.replace(/$\.\//g, ''); // 起始位置的 ./ 去掉
+	        path = path.replace(/^\.?\//, ''); // 起始位置的 ./ 和 / 去掉
 
 	        while (~path.indexOf('../')) {
 	            // 去掉   ../
@@ -465,7 +465,7 @@
 	     * @returns 合并后的规范路径
 	     */
 	    resolvePath: function resolvePath(from, to) {
-	        from = from.replace(/\/[^\/]+$/, '');
+	        from = from.replace(/[^\/]+$/, '');
 	        if (to) {
 	            from += "/" + to;
 	        }

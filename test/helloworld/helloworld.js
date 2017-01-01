@@ -1,6 +1,16 @@
 define([
     './hello',
-    './world'
-], function (hello, world) {
-    return hello + world;
+    './space',
+    './world',
+    '../tool/tool'
+], function (hello, space, world, _) {
+    var result = hello;
+
+    _.each(space, function (k, v) {
+        result += v;
+    });
+
+    result += world;
+
+    return result;
 });

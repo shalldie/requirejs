@@ -1,39 +1,37 @@
-require([
-    './helloworld/helloworld',
-    './module/item1',
-    'module/item2',
-    './tool/tool',
-    'test'
-], function (helloworld, item1, item2, _, test) {
-    var result = helloworld +
-        "<br><br>-----------------------------------------------<br><br>" +
-        "item2 的原始值：<br><br>" + item1;
+require(
+    [
+        './helloworld/helloworld',
+        'tom&lily',
+        './tool/tool'
+    ],
+    function (helloworld, tomlily, _) {
+        var result = tomlily;
+        result += _.toLowerCase('<br><br> THEY SAY:"' + helloworld + '"');
 
-    result += "<br><br>-----------------------------------------------<br><br>" +
-        "在 item1 中处理之后，item2 的现有值为：<br><br>";
-
-    _.each(item2, function (k, v) {
-        result += k + ": " + v + " <br><br>";
-    });
-
-
-    var demo = document.getElementById('demo');
-    demo.innerHTML = result + test;
-    alert(test);
-});
-
-define(
-    'test',
-    ['testtest'],
-    function (tt) {
-        return "this is test " + tt;
+        document.getElementById('demo').innerHTML = result;
     }
 );
 
 define(
-    'testtest',
+    'tom&lily',
+    ['tom', 'lily'],
+    function (tom, lily) {
+        return tom + '<br><br>' + lily;
+    }
+);
+
+define(
+    'tom',
+    ['./tool/tool'],
+    function (_) {
+        return _.toUpperCase('Tom thinks that u are a brave man!');
+    }
+);
+
+define(
+    'lily',
     [],
     function () {
-        return "test module";
+        return 'Lily likes u and she is too shy to tell u...';
     }
-)
+);

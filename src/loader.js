@@ -93,7 +93,7 @@ export function defineModule() {
         let namedDfd = deferred().then(dfdThen);
 
         setTimeout(function () {   // 避免同文件中，多个命名模块注册阻塞，先把名字注册了，具体内容等待一下 event loop 
-            namedDfd.resolve(name, lastModule);
+            namedDfd.resolve(dictName, lastModule);
         }, 0);
     }
 

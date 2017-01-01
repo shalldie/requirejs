@@ -43,5 +43,23 @@ define({
     arrayLike: function (sender) {
         // duck typing ，检测是否属于数组
         return this.type(sender.length) == 'number' && this.type(sender.splice) == 'function';
+    },
+    /**
+     * 变成大写
+     * 
+     * @param {any} sender
+     * @returns
+     */
+    toUpperCase: function (sender) {
+        return sender.toUpperCase();
+    },
+    /**
+     * 变成小写
+     * 
+     * @param {any} sender
+     * @returns
+     */
+    toLowerCase: function (sender) {
+        return sender.toLowerCase();
     }
 });
