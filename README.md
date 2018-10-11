@@ -1,4 +1,7 @@
-# requirejs
-自己实现的一个requirejs库
+## webpack 配置模板
 
-博文：[http://www.cnblogs.com/lianmin/p/my_requirejs.html](http://www.cnblogs.com/lianmin/p/my_requirejs.html)
+    npm run dev
+    开发模式
+
+    npm run build
+    生产
