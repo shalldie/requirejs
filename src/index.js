@@ -1,2 +1,6 @@
-// import './index.scss';
-document.body.innerHTML='<h2>hello world</h2>';
+
+import * as _ from './utils';
+
+const result = _.pathNormalize('./a/b/c/../../e/f');
+
+document.getElementById('root').innerHTML = result;
