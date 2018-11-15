@@ -32,14 +32,15 @@ export function pathNormalize(pathString) {
 }
 
 /**
- * 连接两个路径
+ * 根据父路径和依赖路径，计算子路径
  *
  * @export
- * @param {string} path1
- * @param {string} path2
+ * @param {string} path1 父路径
+ * @param {string} path2 依赖路径
  * @returns {string}
  */
 export function pathJoin(path1, path2) {
+    path1 = path1.replace(/\/[^\/]*?$/, '');
     return pathNormalize(`${path1}/${path2}`);
 }
 
