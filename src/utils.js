@@ -50,21 +50,16 @@ export function pathJoin(path1, path2) {
  * @param {string} src script的地址
  * @returns {Promise<void>}
  */
-export function loadScript(src, onload = function () { }) {
+export function loadScript(src) {
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.charset = 'utf-8';
     script.async = true;
 
     const dfd = new Deferred();
-    script.onload = () => {
-        onload();
-        dfd.resolve();
-    };
+    script.onload = () => dfd.resolve();
 
     script.src = src;
-
-    // console.log(src);
     document.head.appendChild(script);
     return dfd.promise;
 }
