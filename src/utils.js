@@ -1,4 +1,3 @@
-import core from './core';
 import Deferred from 'mini-dfd';
 
 /**
@@ -51,17 +50,21 @@ export function pathJoin(path1, path2) {
  * @param {string} src script的地址
  * @returns {Promise<void>}
  */
-export function loadScript(src) {
+export function loadScript(src, onload = function () { }) {
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.charset = 'utf-8';
     script.async = true;
 
     const dfd = new Deferred();
-    script.onload = () => dfd.resolve();
+    script.onload = () => {
+        onload();
+        dfd.resolve();
+    };
 
     script.src = src;
 
+    // console.log(src);
     document.head.appendChild(script);
     return dfd.promise;
 }

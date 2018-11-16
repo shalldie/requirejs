@@ -2,15 +2,17 @@ import core from './core';
 import * as _ from './utils';
 import Deferred from 'mini-dfd';
 
-// 当前加载的模块
 /**
- * @type { {name:string,moduleDfd:Deferred} }
+ * 当前加载的模块的name的deferred
+ * @type {Deferred}
  */
-let currentModule = {};
+let currentModuleNameDfd = null;
 
 export async function requireModule(deps, callback) {
+    // 等可能存在的具名模块先载入cache
     await _.sleep(0);
-    const args = await Promise.all(deps.map(depUrl => getModule(depUrl)));
+    const argsPro = deps.map(depUrl => getModule(_.pathJoin(core.rootUrl, depUrl)));
+    const args = await Promise.all(argsPro);
     _.getType(callback) === 'function' && callback(...args);
 }
 
@@ -36,11 +38,6 @@ function getModuleResult(sender, args) {
 }
 
 export async function defineModule(...args) {
-    console.log('define before  getmodule');
-    // 等下一个tick，即在 onload 事件结束，onload中会更新currentModule，需要从中取name
-    await _.sleep(0);
-
-    console.log('define after  getmodule');
 
     /**
      * name:   模块名称
@@ -53,27 +50,32 @@ export async function defineModule(...args) {
      * name,deps,sender
      */
     args.reverse();
-    let [sender, deps = [], name = currentModule.name] = args;
+    let [sender, deps = [], name = ''] = args;
 
     if (args.length > 3) {
         throw new Error('模块参数数量异常');
     }
 
+
+    const afterGetName = async currentModuleName => {
+        const joinName = args.length === 3 ? core.rootUrl : currentModuleName;
+        const depArgs = await Promise.all(deps.map(depUrl => getModule(_.pathJoin(joinName, depUrl))));
+        const moduleResult = getModuleResult(sender, depArgs);
+        core.cache[currentModuleName].resolve(moduleResult);
+    };
+
     // 如果是匿名模块，表示异步加载的情况
     if (args.length < 3) {
-        const depArgs = await Promise.all(deps.map(depUrl => getModule(_.pathJoin(name, depUrl))));
-        const moduleResult = getModuleResult(sender, depArgs);
-        currentModule.moduleDfd.resolve(moduleResult);
+        currentModuleNameDfd = new Deferred();
+        currentModuleNameDfd.then(afterGetName);
         return;
     }
 
     // 如果是具名模块，即在通过打包工具打包时
-    const nameDfd = new Deferred();
-    core.cache[name] = nameDfd.promise;
+    const moduleName = _.pathJoin(core.rootUrl, name);
+    core.cache[moduleName] = new Deferred();
     await _.sleep(0);  // 可能依赖了其它具名模块，先注册名称，然后等下一个macrotask
-    const depArgs = await Promise.all(deps.map(depUrl => getModule(depUrl)));
-    const moduleResult = getModuleResult(sender, depArgs);
-    nameDfd.resolve(moduleResult);
+    afterGetName(moduleName);
 }
 
 /**
@@ -86,16 +88,14 @@ export async function defineModule(...args) {
 export async function getModule(name) {
     // 尝试从缓存拿
     if (core.cache[name]) {
-        return core.cache[name];
+        return core.cache[name].promise;
     }
 
     const moduleDfd = new Deferred();
-    core.cache[name] = moduleDfd.promise;
+    core.cache[name] = moduleDfd;
 
     // 模块加载完毕，立马会触发 load 事件，由此来确定模块所属
     await _.loadScript(name + '.js');
-    currentModule.name = name;
-    currentModule.moduleDfd = moduleDfd;
-    console.log('get momdule');
+    currentModuleNameDfd.resolve(name);
     return moduleDfd.promise;
 }
