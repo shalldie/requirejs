@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>requirejs</title>
 </head>
-
 <body>
-    <div id="demo"></div>
-    <script data-main="test/index" src="dist/require.js"></script>
+    <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/babel-polyfill@6.26.0/dist/polyfill.min.js"></script>
+    <script data-main="test/index.js" src="/dist/requirejs.js"></script>
 </body>
-
 </html>

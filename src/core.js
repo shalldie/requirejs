@@ -23,9 +23,9 @@ export default {
      */
     rootUrl: "",
     /**
-     * 依赖模块存储字典
+     * 依赖模块缓存字典
      */
-    dict: {  // 模块字典 {key:string,value:promise}
+    cache: {  // 模块字典 {key:string,value:promise}
 
     }
 };

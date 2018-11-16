@@ -1,7 +1,7 @@
 define({
     /**
      * 检查对象类型
-     * 
+     *
      * @param {any} sender
      * @returns
      */
@@ -10,7 +10,7 @@ define({
     },
     /**
      * 遍历对象
-     * 
+     *
      * @param {any} sender
      * @param {any} callback
      */
@@ -36,7 +36,7 @@ define({
     },
     /**
      * 检测是否属于 (伪)数组
-     * 
+     *
      * @param {any} sender
      * @returns
      */
@@ -46,7 +46,7 @@ define({
     },
     /**
      * 变成大写
-     * 
+     *
      * @param {any} sender
      * @returns
      */
@@ -55,7 +55,7 @@ define({
     },
     /**
      * 变成小写
-     * 
+     *
      * @param {any} sender
      * @returns
      */
