@@ -8,6 +8,9 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "mocha-chrome": "^1.1.0",
     "open": "0.0.5",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
@@ -15,11 +18,20 @@
   },
   "scripts": {
     "dev": "node ./build/server.js",
-    "build": "node ./build/build.js"
+    "build": "node ./build/build.js",
+    "test": "npm run build && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shalldie/requirejs.git"
   },
   "author": "shalldie",
   "license": "ISC",
   "dependencies": {
     "mini-dfd": "^1.0.4"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/shalldie/requirejs/issues"
+  },
+  "homepage": "https://github.com/shalldie/requirejs#readme"
 }

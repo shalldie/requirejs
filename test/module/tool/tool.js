@@ -3,7 +3,7 @@ define({
      * 检查对象类型
      *
      * @param {any} sender
-     * @returns
+     * @return
      */
     type: function (sender) {
         return sender === null ? sender + "" : Object.prototype.toString.call(sender).match(/\s([^\]]+)/)[1].toLowerCase();
@@ -38,7 +38,7 @@ define({
      * 检测是否属于 (伪)数组
      *
      * @param {any} sender
-     * @returns
+     * @return
      */
     arrayLike: function (sender) {
         // duck typing ，检测是否属于数组
@@ -48,7 +48,7 @@ define({
      * 变成大写
      *
      * @param {any} sender
-     * @returns
+     * @return
      */
     toUpperCase: function (sender) {
         return sender.toUpperCase();
@@ -57,7 +57,7 @@ define({
      * 变成小写
      *
      * @param {any} sender
-     * @returns
+     * @return
      */
     toLowerCase: function (sender) {
         return sender.toLowerCase();

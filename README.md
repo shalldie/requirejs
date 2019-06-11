@@ -1,6 +1,8 @@
 # requirejs
 
-自己实现的一个 requirejs 库，只包含了最基础的核心功能。
+[![Build Status](https://travis-ci.org/shalldie/to-cache.svg?branch=master)](https://travis-ci.org/shalldie/to-cache)
+
+自己实现的一个 requirejs 库，包含了最基础的核心功能。
 
 `size: 5.6k`
 

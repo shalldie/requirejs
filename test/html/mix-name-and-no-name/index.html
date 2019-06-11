@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>匿名和具名模块混用+多层级</title>
+        <link rel="stylesheet" href="../../../node_modules/mocha/mocha.css" />
+        <script src="../../../node_modules/mocha/mocha.js"></script>
+        <script src="../../../node_modules/chai/chai.js"></script>
+        <script src="../../../node_modules/babel-polyfill/dist/polyfill.min.js"></script>
+    </head>
+    <body>
+        <div id="mocha"></div>
+        <script>
+            var notifyPromise = new Promise(function(resolve, reject) {
+                window.notify = { resolve: resolve, reject: reject };
+            });
+        </script>
+        <script>
+            mocha.setup('bdd');
+            expect = chai.expect;
+            describe('Tests', function() {
+                it('匿名和具名模块混用+多层级', function() {
+                    return notifyPromise;
+                });
+            });
+            mocha.run();
+        </script>
+
+        <script
+            data-main="lib/main.js"
+            src="../../../dist/requirejs.js"
+        ></script>
+    </body>
+</html>
