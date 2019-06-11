@@ -1,6 +1,6 @@
 # requirejs
 
-[![Build Status](https://travis-ci.org/shalldie/to-cache.svg?branch=master)](https://travis-ci.org/shalldie/to-cache)
+[![Build Status](https://travis-ci.org/shalldie/requirejs.svg?branch=master)](https://travis-ci.org/shalldie/requirejs)
 
 自己实现的一个 requirejs 库，包含了最基础的核心功能。
 
